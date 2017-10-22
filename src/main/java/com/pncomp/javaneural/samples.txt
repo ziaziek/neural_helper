@@ -1,0 +1,24 @@
+----Example----
+
+This file presents an example of usage of the library.
+
+
+import com.pncomp.DataProducer;
+import com.pncomp.RoundZeroInputSumOutputGenerator;
+import com.pncomp.ExpandablePerceptronTrainer;
+
+/**
+ * Created by Przemo on 2017-10-13.
+ */
+public class App {
+
+    static final String filenameDataSet = "D:\\samples.txt";
+    static final String saveNNFileName = "D:\\network.txt";
+
+    public static void main(String args[]) {
+    System.out.println("Application started.");
+         new ExpandablePerceptronTrainer(DataProducer.generateRandomDataSet(2, 1, 2500, new RoundZeroInputSumOutputGenerator(0.5), null)
+                 .createTrainingAndTestSubsets(80, 20), saveNNFileName).trainTestAndSave();
+    }
+
+}
