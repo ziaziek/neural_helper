@@ -1,5 +1,6 @@
 package com.pncomp.javaneural.training;
 
+import com.pncomp.javaneural.testing.NeuralNetworkClassificatorTester;
 import com.pncomp.javaneural.testing.NeuralNetworkTester;
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
@@ -10,6 +11,10 @@ import org.slf4j.LoggerFactory;
  * Trains neural networks based on a given dataset array or data set filename.
  */
 public abstract class NeuralNetworkTrainer {
+
+    public DataSet[] getDataSets() {
+        return dataSets;
+    }
 
     protected DataSet[] dataSets;
     private final String saveNNFileName;
@@ -25,7 +30,6 @@ public abstract class NeuralNetworkTrainer {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private NeuralNetwork network;
-
     /**
      * Cretes neural network trainer
      * @param dataSet Array of dataset consisting of training and testing data sets.
@@ -56,20 +60,38 @@ public abstract class NeuralNetworkTrainer {
      */
     public abstract void trainNetwork();
 
+    public abstract NeuralNetworkTester buildTester();
+
+    private NeuralNetworkTester useTester(){
+        NeuralNetworkTester tester = buildTester();
+        tester.setNetwork(network);
+        tester.setTestSet(dataSets[1]);
+        return tester;
+    }
+
+    public void trainTestAndSave(){
+        trainNetwork();
+        testNetwork();
+    }
+
     /**
      * Tests the trained network based on the calculated training set.
      * Based on the testing results, the network is saved to a file or a message of unsuccessful training is thrown.
      */
     public void testNetwork(){
+        log.warn("Teseting network.");
         if(network!=null){
-            NeuralNetworkTester tester = new NeuralNetworkTester(network, dataSets[1], 0.05);
+            NeuralNetworkTester tester = useTester();
             if(tester.isTrainingSatisfactory()){
                 network.save(saveNNFileName);
                 log.info("Training successful. Network saved at "+saveNNFileName);
             } else {
                 log.warn("Training did not succeed. Error rate "+tester.getResult().getClassificationMetricses()[0].getErrorRate()+", while acceptable rate is "+tester.getAcceptableErrorRate());
             }
-            log.info(tester.getResult().getConfusionMatrix().toString());
+            if(tester.getResult().getConfusionMatrix()!=null)
+                log.info(tester.getResult().getConfusionMatrix().toString());
+        } else {
+            log.warn("Network not ser.");
         }
     }
 }
