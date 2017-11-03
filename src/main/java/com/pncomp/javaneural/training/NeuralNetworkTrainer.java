@@ -1,5 +1,6 @@
 package com.pncomp.javaneural.training;
 
+import com.pncomp.javaneural.services.NetworkSaveReadService;
 import com.pncomp.javaneural.testing.NeuralNetworkClassificatorTester;
 import com.pncomp.javaneural.testing.NeuralNetworkTester;
 import org.neuroph.core.NeuralNetwork;
@@ -17,7 +18,6 @@ public abstract class NeuralNetworkTrainer {
     }
 
     protected DataSet[] dataSets;
-    private final String saveNNFileName;
 
     public NeuralNetwork getNetwork() {
         return network;
@@ -26,6 +26,7 @@ public abstract class NeuralNetworkTrainer {
     protected void setNetwork(NeuralNetwork network) {
         this.network = network;
     }
+    private final NetworkSaveReadService networkSaveReadService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -33,11 +34,11 @@ public abstract class NeuralNetworkTrainer {
     /**
      * Cretes neural network trainer
      * @param dataSet Array of dataset consisting of training and testing data sets.
-     * @param fileNAme filename for  the neural network to be saved to
+     * @param readService service responsible fopr saving and/or reading the network
      */
-    public NeuralNetworkTrainer(DataSet[] dataSet, final String fileNAme){
+    public NeuralNetworkTrainer(DataSet[] dataSet, NetworkSaveReadService readService){
         this.dataSets = dataSet;
-        this.saveNNFileName=fileNAme;
+        this.networkSaveReadService = readService;
     }
 
     /**
@@ -47,12 +48,12 @@ public abstract class NeuralNetworkTrainer {
      * @param outputs number of outputs of the neural network and data set
      * @param includeColumnNames should the column names from the dataset file be included
      * @param delimiter delimiter of the data in the data set
-     * @param saveNNFileName filename for  the neural network to be saved to
+     * @param readService service responsible fopr saving and/or reading the network
      */
-    public NeuralNetworkTrainer(final String dataSetFilename, int inputs, int outputs, boolean includeColumnNames, String delimiter, final String saveNNFileName) {
-        this.saveNNFileName = saveNNFileName;
+    public NeuralNetworkTrainer(final String dataSetFilename, int inputs, int outputs, boolean includeColumnNames, String delimiter, NetworkSaveReadService readService) {
         log.info("Creating dataset from file "+ dataSetFilename);
         dataSets = DataSet.createFromFile(dataSetFilename, inputs, outputs, delimiter, includeColumnNames).createTrainingAndTestSubsets(80, 20);
+        this.networkSaveReadService=readService;
     }
 
     /**
@@ -69,22 +70,22 @@ public abstract class NeuralNetworkTrainer {
         return tester;
     }
 
-    public void trainTestAndSave(){
+    public void trainTestAndSave(String name){
         trainNetwork();
-        testNetwork();
+        testNetwork(name);
     }
 
     /**
      * Tests the trained network based on the calculated training set.
      * Based on the testing results, the network is saved to a file or a message of unsuccessful training is thrown.
      */
-    public void testNetwork(){
+    public void testNetwork(String name){
         log.warn("Teseting network.");
         if(network!=null){
             NeuralNetworkTester tester = useTester();
             if(tester.isTrainingSatisfactory()){
-                network.save(saveNNFileName);
-                log.info("Training successful. Network saved at "+saveNNFileName);
+                networkSaveReadService.saveNetwork(network, name);
+                log.info("Training successful. Network saved at "+name);
             } else {
                 log.warn("Training did not succeed. Error rate "+tester.getResult().getClassificationMetricses()[0].getErrorRate()+", while acceptable rate is "+tester.getAcceptableErrorRate());
             }

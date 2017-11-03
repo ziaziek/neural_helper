@@ -1,6 +1,7 @@
 package com.pncomp.javaneural.training;
 
 import com.pncomp.javaneural.networks.ExpandablePerceptronNeuralNetwork;
+import com.pncomp.javaneural.services.NetworkSaveReadService;
 import com.pncomp.javaneural.testing.NeuralNetworkClassificatorTester;
 import com.pncomp.javaneural.testing.NeuralNetworkTester;
 import org.neuroph.core.data.DataSet;
@@ -10,12 +11,12 @@ public class ExpandablePerceptronTrainer extends NeuralNetworkTrainer {
 
     private int inp, outp;
 
-    public ExpandablePerceptronTrainer(DataSet[] ds, final String fileName){
-        super(ds, fileName);
+    public ExpandablePerceptronTrainer(DataSet[] ds, NetworkSaveReadService readSaveService){
+        super(ds, readSaveService);
     }
 
-    public ExpandablePerceptronTrainer(String dataSetFilename, int inputs, int outputs, boolean includeColumnNames, String delimiter, String saveNNFileName) {
-        super(dataSetFilename, inputs, outputs, includeColumnNames, delimiter, saveNNFileName);
+    public ExpandablePerceptronTrainer(String dataSetFilename, int inputs, int outputs, boolean includeColumnNames, String delimiter, NetworkSaveReadService readSaveService) {
+        super(dataSetFilename, inputs, outputs, includeColumnNames, delimiter,  readSaveService);
         this.inp=inputs;
         this.outp = outputs;
     }
