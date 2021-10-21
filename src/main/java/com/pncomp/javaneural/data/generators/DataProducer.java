@@ -40,7 +40,7 @@ public class DataProducer {
                 dgListener.outputsGenerated(outp);
             }
             row.setDesiredOutput(outp);
-            ds.addRow(row);
+            ds.add(row);
         }
         return  ds;
     }

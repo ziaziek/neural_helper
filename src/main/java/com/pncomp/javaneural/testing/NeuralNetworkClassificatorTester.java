@@ -32,7 +32,7 @@ public class NeuralNetworkClassificatorTester extends NeuralNetworkTester {
     public EvaluationResult testForClassification() {
         Evaluation eval = new Evaluation();
         eval.addEvaluator(new ClassifierEvaluator.Binary(0.5));
-        setResult(eval.evaluateDataSet(network, testSet));
+        setResult(eval.evaluate(network, testSet));
         return getResult();
     }
 
