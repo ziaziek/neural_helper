@@ -23,6 +23,16 @@ public class DataProducer {
         return  generateDataSet(inputs, outputs, rowCount, new RandomInputGenerationFunction(), outputStrategy, dgListener);
     }
 
+    /**
+     * Generate a dataset of data values defined by DataGeneratorFunction and DataProducerOutputGenerationStrategy
+     * @param inputs number of inputs
+     * @param outputs number of outputs
+     * @param rowCount number of rows to generate
+     * @param fx class producing input data
+     * @param outputStrategy class producing output data
+     * @param dgListener listener to the process, fired after every input is generated, and after every output is generated
+     * @return data set
+     */
     public static DataSet generateDataSet(int inputs, int outputs, int rowCount, final DataGeneratorFunction fx, final DataProducerOutputGenerationStrategy outputStrategy, final DataGeneratorListener dgListener){
         DataSet ds = new DataSet(inputs, outputs);
         for (int j = 0; j < rowCount; j++) {
@@ -35,11 +45,11 @@ public class DataProducer {
                 }
             }
             row.setInput(inp);
-            double[] outp = outputStrategy.generateOutput(inp);
+            double[] output = outputStrategy.generateOutput(inp);
             if(dgListener!=null){
-                dgListener.outputsGenerated(outp);
+                dgListener.outputsGenerated(output);
             }
-            row.setDesiredOutput(outp);
+            row.setDesiredOutput(output);
             ds.add(row);
         }
         return  ds;

@@ -48,6 +48,10 @@ public class ExpandablePerceptronNeuralNetwork extends MultiLayerPerceptron {
         });
     }
 
+    /**
+     * Learn the network with given data set
+     * @param trainingSet
+     */
     @Override
     public void learn(DataSet trainingSet) {
         startLearningTime = new Date();

@@ -9,6 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 
+/**
+ * Service class to save neural network into database
+ * By default it uses postgresql database
+ */
 public class NeuralNetworkDefaultDatabaseService implements NetworkSaveReadService {
 
     final static String defaultFileName = "default_nn";
@@ -20,6 +24,12 @@ public class NeuralNetworkDefaultDatabaseService implements NetworkSaveReadServi
         return DriverManager.getConnection("jdbc:postgresql://pncomp.com:5432/nn", "client", "derek");
     }
 
+    /**
+     * Store neural network in database
+     * @param net neural network to save
+     * @param name name of the network
+     * @return 0 if process worked fine
+     */
     @Override
     public int saveNetwork(NeuralNetwork net, String name) {
         Connection conn = null;
@@ -65,6 +75,11 @@ public class NeuralNetworkDefaultDatabaseService implements NetworkSaveReadServi
         return 0;
     }
 
+    /**
+     * Reads neural network from database
+     * @param networkName network name
+     * @return neural network or null, if not found
+     */
     @Override
     public NeuralNetwork readNetwork(String networkName) {
         Connection conn = null;

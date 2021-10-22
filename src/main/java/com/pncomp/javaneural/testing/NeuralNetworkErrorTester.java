@@ -4,6 +4,9 @@ import org.neuroph.core.learning.error.MeanSquaredError;
 import org.neuroph.eval.ErrorEvaluator;
 import org.neuroph.eval.EvaluationResult;
 
+/**
+ * Class to test neural networks. This class is a type of {@link NeuralNetworkClassificatorTester}
+ */
 public class NeuralNetworkErrorTester extends NeuralNetworkClassificatorTester {
     /**
      * Creates the tester
@@ -30,6 +33,10 @@ public class NeuralNetworkErrorTester extends NeuralNetworkClassificatorTester {
         return errorEvaluator.getResult().doubleValue();
     }
 
+    /**
+     * Indicates if training was successful or not
+     * @return true, if the mean square error rate of the test results is less than pre-defined acceptance error rate, provided in the constructor
+     */
     @Override
     public boolean isTrainingSatisfactory() {
         if(getResult()==null){

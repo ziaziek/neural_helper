@@ -10,10 +10,20 @@ public class RoundZeroInputSumOutputGenerator implements DataProducerOutputGener
 
     private final double r;
 
+    /**
+     * Construct the class with given radius for 0,1 output generation
+     * @param radius
+     */
     public RoundZeroInputSumOutputGenerator(double radius) {
         r=radius;
     }
 
+    /**
+     * Generates output vector of 0's and 1's
+     * @param inputs input vector
+     * @return vector of 0's and 1's, based on the simple sum of inputs. If the sum is within the radius +-,
+     * a single value vector of 0 is generated, otherwise - a single value vector of 1
+     */
     @Override
     public double[] generateOutput(double[] inputs) {
         double s=0;

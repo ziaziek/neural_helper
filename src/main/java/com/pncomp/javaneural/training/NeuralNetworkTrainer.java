@@ -1,7 +1,6 @@
 package com.pncomp.javaneural.training;
 
 import com.pncomp.javaneural.services.NetworkSaveReadService;
-import com.pncomp.javaneural.testing.NeuralNetworkClassificatorTester;
 import com.pncomp.javaneural.testing.NeuralNetworkTester;
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
@@ -61,10 +60,10 @@ public abstract class NeuralNetworkTrainer {
      */
     public abstract void trainNetwork();
 
-    public abstract NeuralNetworkTester buildTester();
+    public abstract NeuralNetworkTester build();
 
     private NeuralNetworkTester useTester(){
-        NeuralNetworkTester tester = buildTester();
+        NeuralNetworkTester tester = build();
         tester.setNetwork(network);
         tester.setTestSet(dataSets[1]);
         return tester;
